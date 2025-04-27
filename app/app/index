@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Info System</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            color: #007bff;
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+
+        h2 {
+            color: #007bff;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-container {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        input,
+        select,
+        button {
+            width: 100%;
+            padding: 0.8rem;
+            margin-bottom: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        input:focus,
+        select:focus,
+        button:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+            border: none;
+            font-weight: 600;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            color: #777;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Daniel Mburu's Health Information System</h1>
+        </header>
+
+        <div class="form-container">
+            <h2>Create Health Program</h2>
+            <input type="text" id="program-name" placeholder="Enter program name">
+            <button onclick="createProgram()">Create Program</button>
+        </div>
+
+        <div class="form-container">
+            <h2>Register New Client</h2>
+            <input type="text" id="client-name" placeholder="Enter client name">
+            <input type="number" id="client-age" placeholder="Enter client age">
+            <button onclick="registerClient()">Register Client</button>
+        </div>
+
+        <div class="form-container">
+            <h2>Enroll Client in Program</h2>
+            <input type="text" id="enroll-name" placeholder="Enter client name">
+            <select id="enroll-program">
+                <option disabled selected>Select program</option>
+            </select>
+            <button onclick="enrollClient()">Enroll Client</button>
+        </div>
+
+        <div class="form-container">
+            <h2>Search Client</h2>
+            <input type="text" id="search-name" placeholder="Enter client name">
+            <button onclick="searchClient()">Search</button>
+            <p id="client-profile"></p>
+        </div>
+
+        <footer>
+            <p>&copy; 2025 Daniel Mburu's Health Info System</p>
+        </footer>
+    </div>
+
+    <script>
+        // Data for clients and health programs
+        let clients = {};
+        let programs = [];
+
+        // Function to create a new health program
+        function createProgram() {
+            const programName = document.getElementById('program-name').value;
+            if (programName && !programs.includes(programName)) {
+                programs.push(programName);
+                alert(`Program "${programName}" created successfully!`);
+                updateProgramDropdown();
+                document.getElementById('program-name').value = ''; // Clear input field
+            } else {
+                alert("Program already exists or invalid input.");
+            }
+        }
+
+        // Function to register a new client
+        function registerClient() {
+            const clientName = document.getElementById('client-name').value;
+            const clientAge = document.getElementById('client-age').value;
+
+            if (clientName && clientAge) {
+                clients[clientName] = { name: clientName, age: clientAge, programs: [] };
+                alert(`Client "${clientName}" registered successfully!`);
+                document.getElementById('client-name').value = ''; // Clear input field
+                document.getElementById('client-age').value = ''; // Clear input field
+            } else {
+                alert("Please provide valid client name and age.");
+            }
+        }
+
+        // Function to enroll a client in a program
+        function enrollClient() {
+            const clientName = document.getElementById('enroll-name').value;
+            const program = document.getElementById('enroll-program').value;
+
+            if (clientName && program) {
+                if (clients[clientName]) {
+                    if (!clients[clientName].programs.includes(program)) {
+                        clients[clientName].programs.push(program);
+                        alert(`Client "${clientName}" enrolled in "${program}" program!`);
+                    } else {
+                        alert(`Client "${clientName}" is already enrolled in "${program}" program.`);
+                    }
+                } else {
+                    alert("Client not found.");
+                }
+            } else {
+                alert("Please select a client and program.");
+            }
+        }
+
+        // Function to search for a client and show their profile
+        function searchClient() {
+            const clientName = document.getElementById('search-name').value;
+            const profileElement = document.getElementById('client-profile');
+
+            if (clientName && clients[clientName]) {
+                const client = clients[clientName];
+                profileElement.innerHTML = `<strong>Name:</strong> ${client.name}<br><strong>Age:</strong> ${client.age}<br><strong>Enrolled Programs:</strong> ${client.programs.join(', ')}`;
+            } else {
+                profileElement.innerHTML = "Client not found.";
+            }
+        }
+
+        // Function to update the program dropdown dynamically
+        function updateProgramDropdown() {
+            const programDropdown = document.getElementById('enroll-program');
+            programDropdown.innerHTML = '<option disabled selected>Select program</option>';
+
+            programs.forEach(program => {
+                const option = document.createElement('option');
+                option.value = program;
+                option.textContent = program;
+                programDropdown.appendChild(option);
+            });
+        }
+    </script>
+</body>
+
+</html>
