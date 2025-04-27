@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Daniel Mburu's Health Info System</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <h1>Welcome to Daniel Mburu's Basic Health Information System</h1>
+    <form action="/search/" method="get">
+        <input type="text" name="query" placeholder="Search Clients">
+        <button type="submit">Search</button>
+    </form>
+    <h2>Clients:</h2>
+    <ul>
+        {% for client in clients %}
+            <li><strong>{{ client.name }}</strong> (Age: {{ client.age }}) - Programs: 
+                {% for program in client.programs %}
+                    {{ program.name }}{% if not loop.last %}, {% endif %}
+                {% endfor %}
+            </li>
+        {% else %}
+            <li>No clients found.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
